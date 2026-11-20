@@ -36,17 +36,16 @@ run(
   join(root, "apps/rust-leptos"),
 );
 
-// Static-site config for Vercel: long cache for hashed assets, correct WASM type.
+// Static-site config for Vercel: long cache for Vite's content-hashed asset folders only.
+// (Vercel already serves .wasm as application/wasm; Trunk's hashed files use the default cache.)
+const immutable = [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }];
 writeFileSync(
   join(dist, "vercel.json"),
   JSON.stringify(
     {
       headers: [
-        {
-          source: "/(react/assets|rust)/(.*)\\.(js|css|wasm)",
-          headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
-        },
-        { source: "/(.*)\\.wasm", headers: [{ key: "Content-Type", value: "application/wasm" }] },
+        { source: "/assets/(.*)", headers: immutable },
+        { source: "/react/assets/(.*)", headers: immutable },
       ],
     },
     null,
