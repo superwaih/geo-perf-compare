@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GeoPerf: React vs Rust</title>
+    <meta name="description" content="Load the same map points into a React app and a Rust app side by side and see which shows them faster and stays smooth." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="container top__row">
+        <h1 class="wordmark">GeoPerf</h1>
+        <p id="progress" class="progress" role="status" aria-live="polite">Same points, two apps. Which one keeps up?</p>
+        <div class="go">
+          <button id="clearBtn" class="btn btn--text" type="button" disabled>Start over</button>
+          <button id="clusterBtn" class="btn btn--outline" type="button">Group 100,000 points</button>
+          <button id="loadBtn" class="btn btn--primary" type="button">Load 2,000 points</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container arena" aria-label="The two apps, side by side">
+      <article class="panel panel--react" data-app="react">
+        <div class="panel__head">
+          <h2><span class="swatch swatch--react" aria-hidden="true"></span>React</h2>
+          <span class="status" data-status>Getting ready</span>
+        </div>
+        <iframe title="Map drawn by the React app" data-frame></iframe>
+        <p class="result" data-result>Waiting for points.</p>
+      </article>
+      <article class="panel panel--rust" data-app="rust">
+        <div class="panel__head">
+          <h2><span class="swatch swatch--rust" aria-hidden="true"></span>Rust</h2>
+          <span class="status" data-status>Getting ready</span>
+        </div>
+        <iframe title="Map drawn by the Rust app" data-frame></iframe>
+        <p class="result" data-result>Waiting for points.</p>
+      </article>
+    </main>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

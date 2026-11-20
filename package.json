@@ -1,0 +1,21 @@
+{
+  "name": "geo-perf-compare",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Side-by-side performance comparison of a React + Vite and a Rust (Leptos/WASM) map frontend rendering GeoJSON points.",
+  "scripts": {
+    "setup": "npm install && npm --prefix dashboard install && npm --prefix apps/react-vite install && node scripts/generate-geojson.mjs",
+    "data": "node scripts/generate-geojson.mjs",
+    "start": "concurrently -n dash,react,rust -c cyan,blue,yellow \"npm --prefix dashboard run dev\" \"npm --prefix apps/react-vite run prod\" \"npm run rust:prod\"",
+    "dev": "concurrently -n dash,react,rust -c cyan,blue,yellow \"npm --prefix dashboard run dev\" \"npm --prefix apps/react-vite run dev\" \"npm run rust:dev\"",
+    "rust:prod": "cd apps/rust-leptos && trunk serve --release --port 5175 --no-autoreload",
+    "rust:dev": "cd apps/rust-leptos && trunk serve --port 5175",
+    "build:site": "node scripts/build-site.mjs",
+    "preview:site": "node dashboard/node_modules/vite/bin/vite.js preview dashboard --outDir ../dist --port 4173 --strictPort",
+    "deploy:vercel": "npm run build:site && npx vercel@latest deploy dist --prod"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

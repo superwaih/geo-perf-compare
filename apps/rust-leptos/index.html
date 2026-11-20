@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rust + Leptos map</title>
+    <script>if (window.parent !== window) document.documentElement.classList.add("embedded");</script>
+    <!-- Same Leaflet version as the React app (1.9.4); the map engine is identical in both. -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link data-trunk rel="css" href="styles.css" />
+    <link data-trunk rel="copy-file" href="public/points-2000.geojson" />
+    <link data-trunk rel="copy-file" href="public/points-10000.geojson" />
+    <link data-trunk rel="rust" data-wasm-opt="3" />
+  </head>
+  <body></body>
+</html>
