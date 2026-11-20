@@ -112,7 +112,36 @@ pulls ahead on CPU-heavy work done *inside* WASM (clustering, spatial indexing, 
 ## The two tests
 
 - **Load 2,000 points** measures drawing: the browser and Leaflet do most of the work, identically in both apps, and Rust pays to copy the GeoJSON into WebAssembly and to call Leaflet across the JS↔WASM boundary. React usually matches or beats Rust here.
-- **Group 100,000 points** measures pure calculation: each app generates the same 100,000 points from one seed (not timed), then runs k-means (50 clusters, 15 rounds, about 75 million distance checks) in its own language, and draws the 50 clusters as bubbles. Only the clustering is timed, best of 3 runs. Both apps return a fingerprint of their result, and the dashboard confirms they found the same groups. This is where Rust/WebAssembly pulls ahead (about 2× in our runs).
+- **Group 100,000 points** measures pure calculation: each app generates the same 100,000 points from one seed (not timed), then runs k-means (50 clusters, 15 rounds, about 75 million distance checks) in its own language, and draws the 50 clusters as bubbles. Only the clustering is timed, best of 3 runs. Both apps return a fingerprint of their result, and the dashboard confirms they found the same groups. This is where Rust/WebAssembly pulls ahead (about 1.3× in the benchmark below).
+
+## Benchmark results
+
+Measured on the live site (geoperf.vercel.app), Chrome 156 on a 12-core machine, tab in front,
+one app at a time with the order alternating each run. Median of 5 runs; smoothness is median of 3.
+
+**Loading GeoJSON points (time until they're on screen)**
+
+| Points | React | Rust |
+|---:|---:|---:|
+| 2,000 | 41 ms | 45 ms |
+| 10,000 | 192 ms | 164 ms |
+| 50,000 | 798 ms | 851 ms |
+
+No consistent winner: the two are within about 15% and trade places, because the drawing work is the same JavaScript (Leaflet) in both.
+
+**k-means clustering (50 clusters, 15 rounds), calculation only**
+
+| Points | React | Rust | Rust faster by |
+|---:|---:|---:|---:|
+| 10,000 | 55 ms | 43 ms | 1.3× |
+| 100,000 | 219 ms | 169 ms | 1.3× |
+| 250,000 | 501 ms | 393 ms | 1.3× |
+
+Both apps produced identical clusters at every size.
+
+**Panning and zooming with 10,000 points on the map (5 s)**
+
+React 16.3 fps, Rust 17.4 fps, both choppy. With this many SVG markers the map engine is the bottleneck, not the framework.
 
 The code is `apps/react-vite/src/cluster.ts` and `apps/rust-leptos/src/cluster.rs`, written the normal way in each language.
 
